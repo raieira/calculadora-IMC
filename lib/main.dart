@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MeuAppIMC());
+  runApp(const MyApp());
 }
 
-class MeuAppIMC extends StatelessWidget {
-  const MeuAppIMC({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +17,29 @@ class MeuAppIMC extends StatelessWidget {
   }
 }
 
-class TelaIMC extends StatelessWidget {
+
+class TelaIMC extends StatefulWidget {
   const TelaIMC({super.key});
 
+  @override
+  State<TelaIMC> createState() => _TelaIMCState();
+}
 
-  Widget blocoValor(String valor, String unidade) {
+class _TelaIMCState extends State<TelaIMC> {
+
+  int altura = 170; 
+  int peso = 65; 
+
+  Widget blocoValor({
+    required int valor,
+    required String unidade,
+    required VoidCallback onIncrement,
+    required VoidCallback onDecrement,
+  }) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.all(20),
+      width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -35,25 +50,39 @@ class TelaIMC extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+
           IconButton(
-            onPressed: () {},
+            onPressed: onDecrement,
             icon: const Icon(Icons.remove_circle),
-            iconSize: 50, 
+            iconSize: 80,
+            tooltip: 'Diminuir',
           ),
+
           const SizedBox(width: 15),
-          Text(
-            valor,
-            style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+
+
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '$valor',
+                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                unidade,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ],
           ),
-          Text(
-            " $unidade",
-            style: const TextStyle(fontSize: 20),
-          ),
+
           const SizedBox(width: 15),
+
+      
           IconButton(
-            onPressed: () {},
+            onPressed: onIncrement,
             icon: const Icon(Icons.add_circle),
-            iconSize: 50, 
+            iconSize: 80,
+            tooltip: 'Aumentar',
           ),
         ],
       ),
@@ -73,20 +102,47 @@ class TelaIMC extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            
-            blocoValor("170", "cm"),
+  
+            blocoValor(
+              valor: altura,
+              unidade: 'cm',
+              onIncrement: () {
+                setState(() {
+                   altura++; 
+                });
+              },
+              onDecrement: () {
+                setState(() {
+                  altura--;
+                });
+              },
+            ),
 
-            blocoValor("65", "Kg"),
+
+            blocoValor(
+              valor: peso,
+              unidade: 'Kg',
+              onIncrement: () {
+                setState(() {
+                  peso++;
+                });
+              },
+              onDecrement: () {
+                setState(() {
+                  peso--;
+                });
+              },
+            ),
 
             const SizedBox(height: 20),
 
-        
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+
+              },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
               child: const Text(
                 "Calcular",
@@ -96,7 +152,6 @@ class TelaIMC extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-          
             const Text(
               "Resultado:",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
