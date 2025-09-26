@@ -29,7 +29,37 @@ class _TelaIMCState extends State<TelaIMC> {
 
   int altura = 170; 
   int peso = 65; 
+
+
   String resultado = "...";
+
+  void calcularIMC() {
+    
+    double alturaM = altura / 100;
+    double imc = peso / (alturaM * alturaM);
+
+    setState(() {
+      resultado = imc.toStringAsFixed(2);
+    });
+  }
+
+  String resultadoClassificacao() {
+    double alturaM = altura / 100;
+    double imc = peso / (alturaM * alturaM);
+
+    if (imc < 18.5) {
+      return "MAGREZA";
+    } else if (imc < 24.9) {
+      return "NORMAL";
+    } else if (imc < 29.9) {
+      return "SOBREPESO";
+    } else if (imc < 39.9) {
+      return "OBESIDADE";
+    } else {
+      return "OBESIDADE GRAVE";
+    }
+    };
+  }
 
   Widget blocoValor({
     required int valor,
