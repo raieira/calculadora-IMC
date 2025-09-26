@@ -29,6 +29,7 @@ class _TelaIMCState extends State<TelaIMC> {
 
   int altura = 170; 
   int peso = 65; 
+  String resultado = "...";
 
   Widget blocoValor({
     required int valor,
