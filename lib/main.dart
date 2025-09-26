@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 class TelaIMC extends StatefulWidget {
   const TelaIMC({super.key});
 
@@ -26,40 +25,34 @@ class TelaIMC extends StatefulWidget {
 }
 
 class _TelaIMCState extends State<TelaIMC> {
-
   int altura = 170; 
-  int peso = 65; 
+  int peso = 65;   
+  String resultado = "";
 
-
-  String resultado = "...";
 
   void calcularIMC() {
-    
-    double alturaM = altura / 100;
-    double imc = peso / (alturaM * alturaM);
+    double alturaMetros = altura / 100;
+    double imc = peso / (alturaMetros * alturaMetros);
+
+    String classificacao;
+    if (imc < 18.5) {
+    classificacao = "Magreza";
+    } else if (imc < 24.9) {
+    classificacao = "Normal";
+    } else if (imc < 29.9) {
+    classificacao = "Sobrepeso";
+    } else if (imc < 39.9) {
+    classificacao = "Obesidade";
+    } else {
+    classificacao = "Obesidade Grave";
+    }
+
 
     setState(() {
-      resultado = imc.toStringAsFixed(2);
+    resultado = "IMC: ${imc.toStringAsFixed(1)} - $classificacao";
     });
   }
 
-  String resultadoClassificacao() {
-    double alturaM = altura / 100;
-    double imc = peso / (alturaM * alturaM);
-
-    if (imc < 18.5) {
-      return "MAGREZA";
-    } else if (imc < 24.9) {
-      return "NORMAL";
-    } else if (imc < 29.9) {
-      return "SOBREPESO";
-    } else if (imc < 39.9) {
-      return "OBESIDADE";
-    } else {
-      return "OBESIDADE GRAVE";
-    }
-    };
-  }
 
   Widget blocoValor({
     required int valor,
@@ -81,17 +74,12 @@ class _TelaIMCState extends State<TelaIMC> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-
           IconButton(
             onPressed: onDecrement,
             icon: const Icon(Icons.remove_circle),
             iconSize: 80,
-            tooltip: 'Diminuir',
           ),
-
           const SizedBox(width: 15),
-
-
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -105,15 +93,11 @@ class _TelaIMCState extends State<TelaIMC> {
               ),
             ],
           ),
-
           const SizedBox(width: 15),
-
-      
           IconButton(
             onPressed: onIncrement,
             icon: const Icon(Icons.add_circle),
             iconSize: 80,
-            tooltip: 'Aumentar',
           ),
         ],
       ),
@@ -133,13 +117,12 @@ class _TelaIMCState extends State<TelaIMC> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-  
             blocoValor(
               valor: altura,
               unidade: 'cm',
               onIncrement: () {
                 setState(() {
-                   altura++; 
+                  altura++;
                 });
               },
               onDecrement: () {
@@ -148,8 +131,6 @@ class _TelaIMCState extends State<TelaIMC> {
                 });
               },
             ),
-
-
             blocoValor(
               valor: peso,
               unidade: 'Kg',
@@ -164,13 +145,9 @@ class _TelaIMCState extends State<TelaIMC> {
                 });
               },
             ),
-
             const SizedBox(height: 20),
-
             ElevatedButton(
-              onPressed: () {
-
-              },
+              onPressed: calcularIMC,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -180,17 +157,16 @@ class _TelaIMCState extends State<TelaIMC> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-
             const SizedBox(height: 30),
-
             const Text(
               "Resultado:",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            const Text(
-              "...",
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            Text(
+              resultado,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ],
         ),
