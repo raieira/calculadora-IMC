@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'resultado.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -8,23 +9,22 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "App IMC - SENAC",
-      home: const TelaIMC(),
+      home: const TelaInicial(),
     );
   }
 }
 
-class TelaIMC extends StatefulWidget {
-  const TelaIMC({super.key});
+
+class TelaInicial extends StatefulWidget {
+  const TelaInicial({super.key});
 
   @override
-  State<TelaIMC> createState() => _TelaIMCState();
+  State<TelaInicial> createState() => _TelaInicialState();
 }
 
-class _TelaIMCState extends State<TelaIMC> {
-  int altura = 170; 
-  int peso = 65;   
-  String resultado = "";
-
+class _TelaInicialState extends State<TelaInicial> {
+  int altura = 170;
+  int peso = 65;
 
   void calcularIMC() {
     double alturaMetros = altura / 100;
@@ -32,23 +32,26 @@ class _TelaIMCState extends State<TelaIMC> {
 
     String classificacao;
     if (imc < 18.5) {
-    classificacao = "Magreza";
+      classificacao = "Magreza";
     } else if (imc < 24.9) {
-    classificacao = "Normal";
+      classificacao = "Normal";
     } else if (imc < 29.9) {
-    classificacao = "Sobrepeso";
+      classificacao = "Sobrepeso";
     } else if (imc < 39.9) {
-    classificacao = "Obesidade";
+      classificacao = "Obesidade";
     } else {
-    classificacao = "Obesidade Grave";
+      classificacao = "Obesidade Grave";
     }
 
-
-    setState(() {
-    resultado = "IMC: ${imc.toStringAsFixed(1)} - $classificacao";
-    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TelaResultado(
+          resultado: "IMC: ${imc.toStringAsFixed(1)} - $classificacao",
+        ),
+      ),
+    );
   }
-
 
   Widget blocoValor({
     required int valor,
@@ -146,23 +149,13 @@ class _TelaIMCState extends State<TelaIMC> {
               onPressed: calcularIMC,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
               ),
               child: const Text(
                 "Calcular",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-            ),
-            const SizedBox(height: 30),
-            const Text(
-              "Resultado:",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              resultado,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ],
         ),
