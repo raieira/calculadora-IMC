@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'resultado.dart';
 
 class MyApp extends StatelessWidget {
@@ -14,7 +15,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 class TelaInicial extends StatefulWidget {
   const TelaInicial({super.key});
 
@@ -26,7 +26,27 @@ class _TelaInicialState extends State<TelaInicial> {
   int altura = 170;
   int peso = 65;
 
-  void calcularIMC() {
+  @override
+  void initState() {
+    super.initState();
+    _carregarDados();
+  }
+
+  Future<void> _carregarDados() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      altura = prefs.getInt('altura') ?? 170;
+      peso = prefs.getInt('peso') ?? 65;
+    });
+  }
+
+  Future<void> _salvarDados() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('altura', altura);
+    await prefs.setInt('peso', peso);
+  }
+
+  void calcularIMC() async {
     double alturaMetros = altura / 100;
     double imc = peso / (alturaMetros * alturaMetros);
 
@@ -42,6 +62,8 @@ class _TelaInicialState extends State<TelaInicial> {
     } else {
       classificacao = "Obesidade Grave";
     }
+
+    await _salvarDados();
 
     Navigator.push(
       context,
@@ -120,28 +142,20 @@ class _TelaInicialState extends State<TelaInicial> {
               valor: altura,
               unidade: 'cm',
               onIncrement: () {
-                setState(() {
-                  altura++;
-                });
+                setState(() => altura++);
               },
               onDecrement: () {
-                setState(() {
-                  altura--;
-                });
+                setState(() => altura--);
               },
             ),
             blocoValor(
               valor: peso,
               unidade: 'Kg',
               onIncrement: () {
-                setState(() {
-                  peso++;
-                });
+                setState(() => peso++);
               },
               onDecrement: () {
-                setState(() {
-                  peso--;
-                });
+                setState(() => peso--);
               },
             ),
             const SizedBox(height: 20),
@@ -150,7 +164,8 @@ class _TelaInicialState extends State<TelaInicial> {
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               child: const Text(
                 "Calcular",
